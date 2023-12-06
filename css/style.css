@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #eaeaea;
+}
+
+h2 {
+    color: rgb(114, 39, 39);
+}
+
+.header {
+    padding: 10px 0;
+    background-color: dodgerblue;
+    border-bottom: 3px solid red;
+}
+
+.main {
+    padding: 40px 0;
+}
+
+.section {
+    padding: 60px 0;
+}
+
+.subtotal-div, .ticket-div {
+    padding: 15px;
+    background-color: whitesmoke;
+    border: 3px solid dodgerblue;
+    border-radius: 5px;
+}
+
+.footer {
+    padding: 10px 0;
+}
