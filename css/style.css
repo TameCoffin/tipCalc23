@@ -26,6 +26,10 @@ h2 {
     padding: 60px 0;
 }
 
+.menu-div {
+    padding: 60px 0;
+}
+
 .subtotal-div, .ticket-div {
     padding: 15px;
     background-color: whitesmoke;
