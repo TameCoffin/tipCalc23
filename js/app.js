@@ -212,12 +212,45 @@ menuItems.forEach(item => {
     </div>
     <footer class="card-footer">
         <p class="card-text item-price">${item.price}</p>
-        <button class="btn btn-danger text-capitalize" id="cartBtn">add to card</button>
+        <button class="btn btn-danger text-capitalize cart-btn" id="Btn${item.id}"data-price="${item.price}">add to card</button>
     </footer>
     `
     column.appendChild(card);
-    console.log(column);
+    // console.log(column);
 
-    appRow.appendChild(column);
+    // appRow.appendChild(column);
+
+    // switch (menuItems.type)
+    switch (item.type) {
+        case 'appetizers':
+            appRow.appendChild(column)
+            break;
+        case 'entrees' :
+            entreesRow.appendChild(column)
+            break;
+        case 'drinks' :
+            drinksRow.appendChild(column)
+            break;
+        case 'desserts': 
+            dessertsRow.appendChild(column)
+            break;
+        default: 
+            console.log('Error')
+            break;
+    }
+})
+
+const cartButtons = document.querySelectorAll('.cart-btn')
+const cartSubtotal = document.getElementById('cartSubtoatl')
+let subtotal; 
+
+// add items to cart
+cartButtons.forEach(button => {
+
+    const price = parseFloat(button.getAttribute('data-price'))
+    button.addEventListener('click', ()=> {
+        subtotal+=price
+        cartSubtotal.innerText = subtotal
+    })
 })
 
