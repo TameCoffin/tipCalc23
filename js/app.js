@@ -23,7 +23,7 @@ confirmBtn.addEventListener('click', (e)=> {
 let menuItems = [
     {
         id: 1,
-        type: 'appetizer',
+        type: 'appetizers',
         items: 'salmon dip',
         desc: 'fresh salmon dip and toast',
         imgUrl: 'salmondip.jpg',
@@ -32,7 +32,7 @@ let menuItems = [
     },
     {
         id: 2,
-        type: 'appetizer',
+        type: 'appetizers',
         items: 'onion rings',
         desc: 'deep fried onion rings with comback sauce',
         imgUrl: 'onionrings.jpg',
@@ -41,7 +41,7 @@ let menuItems = [
     },
     {
         id: 3,
-        type: 'appetizer',
+        type: 'appetizers',
         item: 'guacamole dip',
         desc: 'fresh guacamole and pico de gallo made to order and served with chips',
         imgUrl: 'guacamole.jpg',
@@ -50,7 +50,7 @@ let menuItems = [
     },
     {
         id: 4,
-        type: 'appetizer',
+        type: 'appetizers',
         item: 'spinach & artichoke dip',
         desc: 'creamy spinach and artichoke tip served with chips',
         imgUrl: 'spinach.jpg',
@@ -59,7 +59,7 @@ let menuItems = [
     },
     {
         id: 5,
-        type: 'entree',
+        type: 'entrees',
         item: 'chicken sandwich',
         desc: 'breaded chicken breast on a bun with pickles and lettuce',
         imgUrl: '',
@@ -68,7 +68,7 @@ let menuItems = [
     },
     {
         id: 6,
-        type: 'entree',
+        type: 'entrees',
         item: 'veggie burger',
         desc: 'bean veggie patty served with fries',
         imgUrl: '',
@@ -77,7 +77,7 @@ let menuItems = [
     },
     {
         id: 7,
-        type: 'entree',
+        type: 'entrees',
         item: 'salmon',
         desc: 'atlantic salmon served over grits with a side of spinach',
         imgUrl: '',
@@ -86,7 +86,7 @@ let menuItems = [
     },
     {
         id: 8,
-        type: 'entree',
+        type: 'entrees',
         item: 'pizza',
         desc: 'pepperoni and tomato pizza. 6 slices',
         imgUrl: '',
@@ -95,7 +95,7 @@ let menuItems = [
     },
     {
         id: 9,
-        type: 'drink',
+        type: 'drinks',
         item: 'lemonade',
         desc: 'fresh squeezed lemonade',
         imgUrl: '',
@@ -104,7 +104,7 @@ let menuItems = [
     },
     {
         id: 10,
-        type: 'drink',
+        type: 'drinks',
         item: 'beer',
         desc: 'beer',
         imgUrl: '',
@@ -113,7 +113,7 @@ let menuItems = [
     },
     {
         id: 11,
-        type: 'drink',
+        type: 'drinks',
         item: 'wine',
         desc: 'glass of wine',
         imgUrl: '',
@@ -122,7 +122,7 @@ let menuItems = [
     },
     {
         id: 12,
-        type: 'drink',
+        type: 'drinks',
         item: 'sweet tea',
         desc: 'layer sponge cake',
         imgUrl: '',
@@ -131,7 +131,7 @@ let menuItems = [
     },
     {
         id: 13,
-        type: 'dessert',
+        type: 'desserts',
         item: 'tiramisu',
         desc: 'layered sponge cake',
         imgUrl: '',
@@ -140,7 +140,7 @@ let menuItems = [
     },
     {
         id: 14,
-        type: 'dessert',
+        type: 'desserts',
         item: 'brownie',
         desc: 'chocolate brownie served with ice cream',
         imgUrl: '',
@@ -149,7 +149,7 @@ let menuItems = [
     },
     {
         id: 15,
-        type: 'dessert',
+        type: 'desserts',
         item: 'cookie',
         desc: 'chocolate chip cookie',
         imgUrl: '',
@@ -158,7 +158,7 @@ let menuItems = [
     },
     {
         id: 16,
-        type: 'dessert',
+        type: 'desserts',
         item: 'ice cream',
         desc: 'chocolate and vanilla ice cream',
         imgUrl: '',
@@ -167,9 +167,37 @@ let menuItems = [
     }
 ]
 
+// grab the menu-divs
+const menuDivs = document.querySelectorAll('.menu-div')
+
+// grab the types
+const menuType = ['appetizers', 'entrees', 'drinks', 'desserts']
+
+menuDivs.forEach(div => {
+    const menuSubheading = document.createElement('h3')
+    menuSubheading.classList.add('menu-subheading', 'text-capitalize');
+
+    const row = document.createElement('div')
+    row.classList.add('row')
+    
+    div.appendChild(menuSubheading)
+    div.appendChild(row)
+
+})
+
+for (let i = 0; i < menuType.length; i++) {
+    menuDivs[i].children[0].innerText = menuType[i]
+    console.log(menuDivs[i].children[1])
+
+    menuDivs[i].children[1].setAttribute("id", `${menuType[i]}Row`)
+}
+
 // load the menu items
 // grab the appRow
-const appRow = document.getElementById('appRow');
+const appRow = document.getElementById('appetizersRow');
+const entreesRow = document.getElementById('entreesRow');
+const drinksRow = document.getElementById('drinksRow');
+const dessertsRow = document.getElementById('dessertsRow')
 
 menuItems.forEach(item => {
     const column = document.createElement('div')
@@ -190,6 +218,6 @@ menuItems.forEach(item => {
     column.appendChild(card);
     console.log(column);
 
-    appRow.appendChild(column)
+    appRow.appendChild(column);
 })
 
