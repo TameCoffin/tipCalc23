@@ -36,8 +36,7 @@
                     <div class="col-6">
                         <div class="subtotal-div">
                             <form action="#">
-                                <h2 class="form-heading">your subtotal: $<span id="cartSubtotal">0.00</span></h2>
-                                <!-- <input type="number" value="" min="0" class="mb-3" id="subtotalInput"> -->
+                                <h2 class="form-heading">Your subtotal: $<span id="cartSubtotal">0.00</span></h2>
                                 <select name="tipAmt" id="tipAmt">
                                     <option value="">Choose Tip</option>
                                     <option value=".1">10%</option>
@@ -46,15 +45,19 @@
                                     <option value=".22">22%</option>
                                 </select>
                                 <label for="otherAmt" class="text-capitalize text-center">For other amount:</label>
-                                <input type="number" value="" id="otherAmt" min="0" class="mb-3">
+                                <input type="number" value="0" id="otherAmt" min="0" class="mb-3">
                                 <button class="btn btn-primary text-capitalize text-center" id="confirmBtn">confirm tip</button>
                             </form>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="ticket-div text-capitalize">
-                            <h2>Your total is:</h2>
-                            <p class="total-text">$<span id="total"></span></p>
+                            <h2>Your receipt:</h2>
+                            <ol class="receipt" id="receipt"></ol>
+                            <p class="text-end">Subtotal: $<span id="theSubtotal">0.00</span></p>
+                            <p class="text-end">Tax: $<span id="tax">0.00</span></p>
+                            <p class="tip-total text-end" id="tipTotal">Tip: $<span id="yourTip">0.00</span></p>
+                            <p class="total-text text-end">Total bill: $<span id="total">0.00</span></p>
                         </div>
                     </div>
                 </div>

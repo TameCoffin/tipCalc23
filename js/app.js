@@ -1,23 +1,77 @@
 const confirmBtn = document.getElementById('confirmBtn');
 const totalDisplay = document.getElementById('total');
+const cartSubtotal = document.getElementById('cartSubtotal')
+const menuDivs = document.querySelectorAll('.menu-div')
+const receipt = document.getElementById('receipt')
 
 // confirm button
 confirmBtn.addEventListener('click', (e)=> {
     e.preventDefault()
-    const subtotal = parseFloat(document.getElementById('subtotalInput').value)
-    const tipAmt = parseFloat(document.getElementById('tipAmt').value)
-    const otherAmt = parseFloat(document.getElementById(otherAmt).value)
-
-    let total;
-    
-    isNaN(tipAmt) ? total = subtotal + otherAmt : total = (subtotal * tipAmt) + subtotal
-
-    console.log(tipAmt)
-
-    // toFixed is how many decimal points you want
-
-    totalDisplay.innerText = total.toFixed(2)
+    getTotal()
 })
+
+const getTotal=()=> {
+    const subtotal = parseFloat(cartSubtotal.innerText)
+    const tipAmt = parseFloat(document.getElementById('tipAmt').value)
+    const otherAmt = parseFloat(document.getElementById('otherAmt').value)
+    const yourTip = document.getElementById('yourTip')
+    const theSubtotal = document.getElementById('theSubtotal')
+    const taxDisplay = document.getElementById('tax')
+
+    let taxTotal = subtotal * tax;
+
+    let receiptTip = isNaN(tipAmt) ? otherAmt : (subtotal * tipAmt)
+    
+    let total = isNaN(tipAmt) ? subtotal + otherAmt + taxTotal : (subtotal * tipAmt) + subtotal + taxTotal
+    
+    theSubtotal.innerText = subtotal
+    taxDisplay.innerText = taxTotal.toFixed(2)
+    yourTip.innerText = receiptTip.toFixed(2)
+    totalDisplay.innerText = total.toFixed(2)
+}
+
+// make receipt 
+const makeReceipt =(obj, el)=> {
+    const listItem = document.createElement('li')
+    listItem.classList.add('receipt-item', 'd-flex', 'justify-content-between')
+
+    const receiptChoice = document.createElement('span')
+    receiptChoice.classList.add('receipt-choice')
+    receiptChoice.innerText = obj.item
+
+    const receiptQty = document.createElement('span')
+    receiptQty.classList.add('receipt-qty')
+    // receiptQty.setAttribute('id', 'receiptQty') // "setAttribute" will create an id
+    receiptQty.setAttribute('id',`qty${obj.id}`)
+    receiptQty.innerText = obj.qty
+
+    const receiptPrice = document.createElement('span')
+    receiptPrice.classList.add('receipt-price')
+    receiptPrice.innerText = obj.price
+
+    const itemSubtotal = document.createElement('span')
+    itemSubtotal.classList.add('item-subtotal')
+    itemSubtotal.setAttribute('id', `subTotal${obj.id}`)
+    itemSubtotal.innerText = obj.itemTotal
+
+    listItem.appendChild(receiptChoice)
+    listItem.appendChild(receiptQty)
+    listItem.appendChild(receiptPrice)
+    listItem.appendChild(itemSubtotal)
+
+    el.appendChild(listItem)
+
+    console.log(listItem)
+}
+
+const updateReceipt =(obj, qty, itemTotal)=> {
+    
+    const receiptQty = document.getElementById(`qty${obj.id}`)
+    receiptQty.innerText = qty
+
+    const itemSubtotal = document.getElementById(`subTotal${obj.id}`)
+    itemSubtotal.innerText = itemTotal.toFixed(2)
+}
 
 // create menu items. array of objects
 let menuItems = [
@@ -168,7 +222,7 @@ let menuItems = [
 ]
 
 // grab the menu-divs
-const menuDivs = document.querySelectorAll('.menu-div')
+
 
 // grab the types
 const menuType = ['appetizers', 'entrees', 'drinks', 'desserts']
@@ -212,7 +266,14 @@ menuItems.forEach(item => {
     </div>
     <footer class="card-footer">
         <p class="card-text item-price">${item.price}</p>
-        <button class="btn btn-danger text-capitalize cart-btn" id="Btn${item.id}"data-price="${item.price}">add to card</button>
+        <button 
+        class="btn btn-danger text-capitalize cart-btn" 
+        id="Btn${item.id}"
+        data-id="${item.id}"
+        data-price="${item.price}"
+        data-qty="${item.qty}"
+        data-item="${item.item}"
+        >add to card</button>
     </footer>
     `
     column.appendChild(card);
@@ -241,16 +302,72 @@ menuItems.forEach(item => {
 })
 
 const cartButtons = document.querySelectorAll('.cart-btn')
-const cartSubtotal = document.getElementById('cartSubtoatl')
-let subtotal; 
+
+let subtotal = 0; 
+let tax = .07;
+
+let receiptArray = []
 
 // add items to cart
 cartButtons.forEach(button => {
 
     const price = parseFloat(button.getAttribute('data-price'))
+    let qty = parseFloat(button.getAttribute('data-qty'))
+    const item = button.getAttribute('data-item')
+    const id = parseFloat(button.getAttribute('data-id'))
     button.addEventListener('click', ()=> {
+        
+        qty+=1
+        let itemObj = {
+            id: id,
+            item: item,
+            qty: qty,
+            price: price,
+            itemTotal: qty * price
+        }
+        
+        if (itemObj.qty == 1) {
+            receiptArray = [...receiptArray, itemObj]
+            makeReceipt(itemObj, receipt)
+        } else {
+            for (let i = 0; i < receiptArray.length; i++) {
+                if (receiptArray[i].id == id) {
+                    receiptArray[i].qty = itemObj.qty++
+                    receiptArray[i].itemTotal = receiptArray[i].qty * price
+                    updateReceipt(receiptArray[i], receiptArray[i].qty, receiptArray[i].itemTotal)
+                }
+            }
+        }
+
+        
+
+        // spread operator => ...something (takes away brackets and just returns the items)
+
+        console.log(receiptArray);
+
         subtotal+=price
-        cartSubtotal.innerText = subtotal
+        cartSubtotal.innerText = subtotal.toFixed(2)
     })
 })
 
+const addItems =()=> {
+    
+}
+
+// Examples using spread operator: let arr = [
+//     'hello',
+//     'my',
+//     'name',
+//     'is'
+// ]
+
+// let numArr = [
+//     1, 2, 3, 4,
+// ]
+
+// console.log(...arr);
+// console.log(...numArr);
+
+// let newArr = [...arr, 'Seth'];
+
+// console.log(newArr);
