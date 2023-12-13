@@ -32,36 +32,34 @@ const getTotal=()=> {
 
 // make receipt 
 const makeReceipt =(obj, el)=> {
-    const listItem = document.createElement('li')
-    listItem.classList.add('receipt-item', 'd-flex', 'justify-content-between')
+    const tableRow = document.createElement('tr')
+    tableRow.classList.add('receipt-item', 'text-start')
 
-    const receiptChoice = document.createElement('span')
-    receiptChoice.classList.add('receipt-choice')
+    const receiptChoice = document.createElement('td')
+    receiptChoice.classList.add('receipt-choice', 'text-center')
     receiptChoice.innerText = obj.item
 
-    const receiptQty = document.createElement('span')
-    receiptQty.classList.add('receipt-qty')
+    const receiptQty = document.createElement('td')
+    receiptQty.classList.add('receipt-qty', 'text-center')
     // receiptQty.setAttribute('id', 'receiptQty') // "setAttribute" will create an id
     receiptQty.setAttribute('id',`qty${obj.id}`)
     receiptQty.innerText = obj.qty
 
-    const receiptPrice = document.createElement('span')
-    receiptPrice.classList.add('receipt-price')
+    const receiptPrice = document.createElement('td')
+    receiptPrice.classList.add('receipt-price', 'text-center')
     receiptPrice.innerText = obj.price
 
-    const itemSubtotal = document.createElement('span')
-    itemSubtotal.classList.add('item-subtotal')
+    const itemSubtotal = document.createElement('td')
+    itemSubtotal.classList.add('item-subtotal', 'text-center')
     itemSubtotal.setAttribute('id', `subTotal${obj.id}`)
     itemSubtotal.innerText = obj.itemTotal
 
-    listItem.appendChild(receiptChoice)
-    listItem.appendChild(receiptQty)
-    listItem.appendChild(receiptPrice)
-    listItem.appendChild(itemSubtotal)
+    tableRow.appendChild(receiptChoice)
+    tableRow.appendChild(receiptQty)
+    tableRow.appendChild(receiptPrice)
+    tableRow.appendChild(itemSubtotal)
 
-    el.appendChild(listItem)
-
-    console.log(listItem)
+    el.appendChild(tableRow)
 }
 
 const updateReceipt =(obj, qty, itemTotal)=> {
@@ -82,7 +80,7 @@ let menuItems = [
         desc: 'fresh salmon dip and toast',
         imgUrl: 'salmondip.jpg',
         price: 18.99,
-        qty: 0
+        qty: 10
     },
     {
         id: 2,
@@ -266,14 +264,31 @@ menuItems.forEach(item => {
     </div>
     <footer class="card-footer">
         <p class="card-text item-price">${item.price}</p>
-        <button 
-        class="btn btn-danger text-capitalize cart-btn" 
-        id="Btn${item.id}"
-        data-id="${item.id}"
-        data-price="${item.price}"
-        data-qty="${item.qty}"
-        data-item="${item.item}"
-        >add to card</button>
+        <div class="buttons-div d-flex justify-content-around">
+            <button 
+                class="btn btn-danger text-capitalize cart-btn" 
+                id="Btn${item.id}"
+                data-id="${item.id}"
+                data-price="${item.price}"
+                data-qty="${item.qty}"
+                data-item="${item.item}"
+            >add to card</button>
+            <div class="qty-div">
+                <button 
+                class="btn btn-primary btn-subtract" 
+                id="btnSubtract${item.id}"
+                data-id="${item.id}"
+                data-qty="${item.qty}"
+                > - </button>
+                <span class="quantity" id="quantity${item.id}">${item.qty}</span>
+                <button 
+                class="btn btn-primary btn-add" 
+                id="btnAdd${item.id}"
+                data-id="${item.id}"
+                data-qty="${item.qty}"
+                > + </button>
+            </div>
+        </div>
     </footer>
     `
     column.appendChild(card);
@@ -310,49 +325,76 @@ let receiptArray = []
 
 // add items to cart
 cartButtons.forEach(button => {
-
+    
     const price = parseFloat(button.getAttribute('data-price'))
     let qty = parseFloat(button.getAttribute('data-qty'))
     const item = button.getAttribute('data-item')
     const id = parseFloat(button.getAttribute('data-id'))
     button.addEventListener('click', ()=> {
-        
         qty+=1
-        let itemObj = {
-            id: id,
-            item: item,
-            qty: qty,
-            price: price,
-            itemTotal: qty * price
-        }
-        
-        if (itemObj.qty == 1) {
-            receiptArray = [...receiptArray, itemObj]
-            makeReceipt(itemObj, receipt)
-        } else {
-            for (let i = 0; i < receiptArray.length; i++) {
-                if (receiptArray[i].id == id) {
-                    receiptArray[i].qty = itemObj.qty++
-                    receiptArray[i].itemTotal = receiptArray[i].qty * price
-                    updateReceipt(receiptArray[i], receiptArray[i].qty, receiptArray[i].itemTotal)
-                }
-            }
-        }
-
-        
-
-        // spread operator => ...something (takes away brackets and just returns the items)
-
-        console.log(receiptArray);
-
-        subtotal+=price
-        cartSubtotal.innerText = subtotal.toFixed(2)
+        addItems(price, qty, item, id)
     })
 })
 
-const addItems =()=> {
+const addItems =(price, qty, item, id)=> {
     
+    let itemObj = {
+        id: id,
+        item: item,
+        qty: qty,
+        price: price,
+        itemTotal: qty * price
+    }
+
+    if (itemObj.qty == 1) {
+        receiptArray = [...receiptArray, itemObj]
+        makeReceipt(itemObj, receipt)
+    } else {
+        for (let i = 0; i < receiptArray.length; i++) {
+            if (receiptArray[i].id === id) {
+                receiptArray[i].qty = itemObj.qty++
+                receiptArray[i].itemTotal = receiptArray[i].qty * price
+                updateReceipt(receiptArray[i], receiptArray[i].qty, receiptArray[i].itemTotal)
+            }
+        }
+    }
+
+    subtotal+=price
+    cartSubtotal.innerText = subtotal.toFixed(2)
 }
+
+const btnSubtract = document.querySelectorAll('.btn-subtract')
+const btnAdd = document.querySelectorAll('.btn-add')
+
+btnSubtract.forEach(button => {
+    button.addEventListener('click', ()=> {
+        const btnQty = parseFloat(button.getAttribute('data-qty'))
+        const btnId = parseFloat(button.getAttribute('data-id'))
+        const spanQty = document.getElementById(`quantity${btnId}`)
+
+        for (let i = 0; i < menuItems.length; i++) {
+            if(menuItems[i].id == btnId && menuItems[i].qty > 0) {
+                menuItems[i].qty-=1
+                spanQty.innerText = menuItems[i].qty
+            }
+        }
+    })
+})
+
+btnAdd.forEach(button => {
+    button.addEventListener('click', ()=> {
+        const btnQty = parseFloat(button.getAttribute('data-qty'))
+        const btnId = parseFloat(button.getAttribute('data-id'))
+        const spanQty = document.getElementById(`quantity${btnId}`)
+
+        for (let i = 0; i < menuItems.length; i++) {
+            if(menuItems[i].id == btnId && menuItems[i].qty > 0) {
+                menuItems[i].qty+=1
+                spanQty.innerText = menuItems[i].qty
+            }
+        }
+    })
+})
 
 // Examples using spread operator: let arr = [
 //     'hello',

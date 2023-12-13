@@ -33,7 +33,7 @@
         <div class="checkout-section">
             <div class="container">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         <div class="subtotal-div">
                             <form action="#">
                                 <h2 class="form-heading">Your subtotal: $<span id="cartSubtotal">0.00</span></h2>
@@ -50,14 +50,30 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         <div class="ticket-div text-capitalize">
                             <h2>Your receipt:</h2>
-                            <ol class="receipt" id="receipt"></ol>
-                            <p class="text-end">Subtotal: $<span id="theSubtotal">0.00</span></p>
-                            <p class="text-end">Tax: $<span id="tax">0.00</span></p>
-                            <p class="tip-total text-end" id="tipTotal">Tip: $<span id="yourTip">0.00</span></p>
-                            <p class="total-text text-end">Total bill: $<span id="total">0.00</span></p>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <table class="receipt" id="receiptTable">
+                                        <tbody id="receipt">
+                                            <tr>
+                                                <td class="table-headers text-capitalize text-center">item</td>
+                                                <td class="table-headers text-capitalize text-center">quantity</td>
+                                                <td class="table-headers text-capitalize text-center">price</td>
+                                                <td class="table-headers text-capitalize text-center">item total</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-sm-4"> 
+                                    <!-- can we put a nested row here? -->
+                                    <p class="text-start">Subtotal: $<span id="theSubtotal">0.00</span></p>
+                                    <p class="text-start">Tax: $<span id="tax">0.00</span></p>
+                                    <p class="tip-total text-start" id="tipTotal">Tip: $<span id="yourTip">0.00</span></p>
+                                    <p class="total-text text-start">Total bill: $<span id="total">0.00</span></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
