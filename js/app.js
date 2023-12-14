@@ -239,7 +239,7 @@ menuDivs.forEach(div => {
 
 for (let i = 0; i < menuType.length; i++) {
     menuDivs[i].children[0].innerText = menuType[i]
-    console.log(menuDivs[i].children[1])
+    // console.log(menuDivs[i].children[1])
 
     menuDivs[i].children[1].setAttribute("id", `${menuType[i]}Row`)
 }
@@ -316,22 +316,26 @@ menuItems.forEach(item => {
     }
 })
 
-const cartButtons = document.querySelectorAll('.cart-btn')
 
 let subtotal = 0; 
 let tax = .07;
 
 let receiptArray = []
 
+const cartButtons = document.querySelectorAll('.cart-btn')
 // add items to cart
 cartButtons.forEach(button => {
     
     const price = parseFloat(button.getAttribute('data-price'))
-    let qty = parseFloat(button.getAttribute('data-qty'))
     const item = button.getAttribute('data-item')
     const id = parseFloat(button.getAttribute('data-id'))
+
     button.addEventListener('click', ()=> {
-        qty+=1
+        let qty;
+        for (let i = -0; i < menuItems.length; i++) {
+            menuItems[i].id == id ? qty = menuItems[i].qty : null
+        }
+        console.log(qty);
         addItems(price, qty, item, id)
     })
 })
@@ -339,27 +343,20 @@ cartButtons.forEach(button => {
 const addItems =(price, qty, item, id)=> {
     
     let itemObj = {
-        id: id,
-        item: item,
-        qty: qty,
-        price: price,
+        id,
+        item,
+        qty,
+        price,
         itemTotal: qty * price
     }
 
-    if (itemObj.qty == 1) {
-        receiptArray = [...receiptArray, itemObj]
-        makeReceipt(itemObj, receipt)
-    } else {
-        for (let i = 0; i < receiptArray.length; i++) {
-            if (receiptArray[i].id === id) {
-                receiptArray[i].qty = itemObj.qty++
-                receiptArray[i].itemTotal = receiptArray[i].qty * price
-                updateReceipt(receiptArray[i], receiptArray[i].qty, receiptArray[i].itemTotal)
-            }
-        }
-    }
+    console.log(itemObj);
 
-    subtotal+=price
+    receiptArray = [...receiptArray, itemObj]
+    makeReceipt(itemObj, receipt)
+
+
+    subtotal+= itemObj.itemTotal
     cartSubtotal.innerText = subtotal.toFixed(2)
 }
 
@@ -368,7 +365,6 @@ const btnAdd = document.querySelectorAll('.btn-add')
 
 btnSubtract.forEach(button => {
     button.addEventListener('click', ()=> {
-        const btnQty = parseFloat(button.getAttribute('data-qty'))
         const btnId = parseFloat(button.getAttribute('data-id'))
         const spanQty = document.getElementById(`quantity${btnId}`)
 
@@ -381,6 +377,8 @@ btnSubtract.forEach(button => {
     })
 })
 
+console.log(cartButtons[12].dataset.qty);
+
 btnAdd.forEach(button => {
     button.addEventListener('click', ()=> {
         const btnQty = parseFloat(button.getAttribute('data-qty'))
@@ -388,8 +386,11 @@ btnAdd.forEach(button => {
         const spanQty = document.getElementById(`quantity${btnId}`)
 
         for (let i = 0; i < menuItems.length; i++) {
-            if(menuItems[i].id == btnId && menuItems[i].qty > 0) {
+            if(menuItems[i].id == btnId 
+                && menuItems[i].qty < 20 
+                && cartButtons[i].dataset.id == btnId) {
                 menuItems[i].qty+=1
+                cartButtons[i].setAttribute('data-qty', menuItems[i].qty)
                 spanQty.innerText = menuItems[i].qty
             }
         }
